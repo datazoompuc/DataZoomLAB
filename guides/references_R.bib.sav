@@ -1,0 +1,37 @@
+% Encoding: UTF-8
+
+@Book{Wickham2015,
+  author    = {Wickham, Hadley},
+  publisher = {O'Reilly UK Ltd.},
+  title     = {R Packages},
+  year      = {2015},
+  isbn      = {1491910593},
+  month     = apr,
+  ean       = {9781491910597},
+  pagetotal = {182},
+  url       = {https://r-pkgs.org/},
+}
+
+@Book{Wickham2019,
+  author    = {Wickham, Hadley},
+  publisher = {Taylor & Francis Inc},
+  title     = {Advanced R, Second Edition},
+  year      = {2019},
+  isbn      = {0815384572},
+  month     = may,
+  ean       = {9780815384571},
+  pagetotal = {588},
+}
+
+@Book{HadleyWickham2017,
+  author    = {Hadley Wickham, Garrett Grolemund},
+  publisher = {O'Reilly UK Ltd.},
+  title     = {R for Data Science},
+  year      = {2017},
+  isbn      = {1491910399},
+  month     = jan,
+  ean       = {9781491910399},
+  url       = {https://www.ebook.de/de/product/23900484/hadley_wickham_garrett_grolemund_r_for_data_science.html},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}

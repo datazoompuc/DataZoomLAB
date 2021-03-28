@@ -1,0 +1,114 @@
+---
+title: "R: Uma Breve Introdução"
+author: "DataZoomLAB Team and Daniel AC Barbosa"
+date: "28/03/2021"
+output: html_document
+bibliography: references_R.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introdução
+
+Essas notas introdutórias visam familiarizar os membros do DataZoom com a linguagem de programação R, commeçando com exemplos simples até ir avançando ao fluxo de desenvolvimento (workflow) atual dos produtos desenvolvidos pelo LAB. As notas são baseadas em duas notas de aulas [@McDermott2021; @OliveiraCavalcante2021], asim como em livros escritos para cientistas de dados em R [@HadleyWickham2017; @Wickham2019]. @Wickham2015 é uma referência fundamental ao worflow do LAB, porém será discutida em notas posteriores.
+
+## Instalação
+
+Siga as instruções aqui [link](https://rstudio-education.github.io/hopr/starting.html)
+
+## Introdução ao R
+
+Referências: 
+
+  - @McDermott2021 [Lecture 1 - Introduction](https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.html)
+  - @McDermott2021 [Lecture 4 - R language basics](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.html)
+  
+## Manuseio de Dados 
+
+Vamos adotar como paradigma o [Tidyverse](https://www.tidyverse.org/). Ele é um conjunto de pacotes para o R voltados a Data Science, tendo como livro introdutório o [R for Data Science](https://r4ds.had.co.nz/) [@HadleyWickham2017].
+
+É importante mencionar que, mesmo com o Tidyverse tendo ganho amplo escopo dentro da comunidade (inclusive entre economistas adeptos de R, veja @McDermott2021), ele é *um* dos estilos de programação possíveis na linguagem R, não o único. Para ciência de dados, uma outra possibilidade é o [Data.Table](https://raw.githack.com/uo-ec607/lectures/master/05-datatable/05-datatable.html).
+
+Não obstante, nas palavras de @OliveiraCavalcante2021: "*tidyverse* é o caminho. O R base não deixa de ser nosso lar, mas já tem mais de 20 anos e algumas atualizações são mais que bem vindas. De fato, as soluções fora do tidyverse são quase sempre mais complexas, com sintaxe menos limpa e por isso, pouco amigáveis com iniciantes"
+
+Referências:
+
+  - @McDermott2021 [Lecture 5 - Data Wrangling Tidyverse](https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html)
+
+Referêncis Adicionais:
+
+  - [R for Data Science - Explore](https://r4ds.had.co.nz/explore-intro.html) @HadleyWickham2017
+  - [R for Data Science - Wrangle](https://r4ds.had.co.nz/wrangle-intro.html) @HadleyWickham2017
+  - [Tidyverse Styling Guide](https://style.tidyverse.org/)
+  
+## Escrevendo Funções
+
+[EM CONSTRUÇÃO]
+
+## Extraindo Dados da Web (*Webscrapping*)
+
+[EM CONSTRUÇÃO]
+
+## Workflow
+
+Uma vez que o básico da linguagem R e do Tidyverse foram vistos, é hora de entender o fluxo de trabalho desenvolvido para a criação e manutanção dos produtos desenvolvidos pelo DataZoom. 
+
+### Version Control
+
+Primeiro, vamos entender o conceito de controle de versão (*version control*), amplamente usado na comunidade de ciência de dados para assegurar a estabilidade e integridade dos códigos desenvolvidos, asssim como facilitar que diferentes membros trabalhem paralelamente em um mesmo projeto.
+
+Para tal, vamos olhar para o [Git](https://git-scm.com/) e para o [GitHub](https://github.com/). Veja que os links já diferem entre si, e, mais importante, os nomes já são informativos! Git-Hub, significa que a plataforma (Hub) hospeda desenvolvimento de códigos e auxilia no controle de versionamento (Git) de uma forma mais natural para nós humanos. O DataZoom fica hospedado no GitHub como organização [(link)](https://github.com/datazoompuc), enquanto os produtos ficam armazenados na forma de repositórios ([DataZoom Amazônia](https://github.com/datazoompuc/datazoom.amazonia).
+
+OBS: Os outros repositórios que não o [DataZoom Amazônia](https://github.com/datazoompuc/datazoom.amazonia), estão em **STATA**, uma outra linguagem de programação, a qual não será abordada nesse documento. Entretanto, os princípios de uso do Git/GitHub são os mesmos entre as diferentes linguagens e o aprendizado aqui pode ser extendido, resguardada as devidas diferenças de sintaxe entre as linguagens.
+
+Referências:
+
+ - @McDermott2021 [Lecture 2 - Version control with Git(Hub)](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html)
+
+Essa é uma ótima introdução ao Git(Hub). Porém, como o Grant é usuário de sistemas operacionais Linux, ele dá muita ênfase ao uso do prompt de comando (ou terminal) -- mais sobre isso abaixo. A minha experiência prévia é que pessoas iniciando no mundo da programação tendem a achar frustrante começar com o prompt e preferem algo mais *user-friendly*. Por isso, recomendo fortemente a instalação do [GitHub Desktop](https://desktop.github.com/), uma interface para o sistema de controle de versão muito amigável.
+
+  - [GitHub Desktop Getting Started](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/getting-started-with-github-desktop)
+
+Referências Adicionais:
+
+Caso você queira se aventurar e aprender a usar o prompt de comando, a referência abaixo é muito útil. No entanto, se esse nome pareceu estranho, melhor pular essa parte. Usuários de Windows geralmente não utilizam o prompt no seu fluxo de trabalho usual, mas caso você trabalhe em um sistema operacional Linux ou MACOSX e já esteja habituado, essa referência pode ser útil.
+
+  - @McDermott2021 [Lecture 3 - Learning to love the shell](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html)
+  
+### Pacotes no R
+
+[EM CONSTRUÇÃO]
+
+#### Documentando suas funções
+
+#### Escrevendo boas vignettes
+
+#### Programação Defensiva (ou como se prevenir do seu próprio erro)
+
+### Criar/Contribuir para um Repositório
+
+Wrap Up dos anteriors + Pull Requests [EM CONSTRUÇÃO]
+
+## Bonus!
+
+[EM CONSTRUÇÃO]
+
+### Análise de Dados Georeferenciados
+
+### Inferência Estatística
+
+### Visualização de Dados
+
+Esse item terá um guia específico com incorporação de discussão de Shiny, WordPress/GitHub Pages e GGPlot. Aqui será uma breve discussão de um Ggplot básico para construção de boas vignettes.
+
+### Estilo de Programação (Paradigmas)
+
+#### Programação Funcional
+
+### Eu quero mais! Próximos Passos =)
+
+## Bibliografia
+
+
