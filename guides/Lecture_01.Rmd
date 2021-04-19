@@ -1,0 +1,55 @@
+---
+title: "Aula 1: Introdução ao R"
+author: "DZLab Team"
+date: "January 2021"
+mainfont: Computer Modern
+output: 
+        beamer_presentation:
+                theme: "Pittsburgh"
+                colortheme: "dolphin"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,dev="cairo_pdf")
+```
+
+## DataZoom 
+
+## Motivação
+
+Data science skills are largely distinct from (and complementary to) the core 'metrics oeuvre familiar to economists.
+
+  + Data viz, cleaning and wrangling; programming; cloud computation; relational databases; machine learning; etc.
+
+## Programa
+
+Data science basics
+
+    Introduction: Motivation, software installation, and data visualization
+    Version control with Git(Hub)
+    Learning to love the shell
+    R language basics
+    Data cleaning and wrangling: 1) tidyverse and 2) data.table
+    Webscraping: (1) Server-side and CSS
+    Webscraping: (2) Client-side and APIs
+
+Analysis and programming
+
+    Regression analysis in R
+    Spatial analysis in R
+    Functions in R: (1) Introductory concepts
+    Functions in R: (2) Advanced concepts
+    Parallel programming
+
+## Começando
+
+
+
+
+* **Climate**: Harari and La Ferrara (*REStat*, 2018), McGuirk and Nunn (*NBER WP*, 2021)
+
+* **Price Shocks**: Dube and Vargas (*REStud*, 2013),  McGuirk and Burke (*JPE*, 2020), Berman et al. (*AER*, 2017)
+
+* **Policy Shocks**: Berman, Shapiro and Felter (*JPE*, 2011), Dell (*AER*, 2015)
+
+

@@ -1,0 +1,443 @@
+---
+title: "DZ Lab: R Lecture Series"
+subtitle: "Data Management"  
+author: 
+  - "Daniel AC Barbosa & Francisco Cavalcanti"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, fig.height=3.5, fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  fig.show = TRUE,
+  hiline = TRUE
+)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#235b53",
+  header_font_google = google_font("Noto Serif"),
+  text_font_google   = google_font("Montserrat", "300", "300i"),
+  code_font_google   = google_font("Fira Mono"))
+```
+
+
+## Relembrando...
+
+Nas aulas passadas ja vimos:
+
+- Introducao ao R e motivacao atraves do [**ggplot2**](https://ggplot2.tidyverse.org/)
+- Introducao ao sistema de pacotes no R atraves do [**devtools**](https://github.com/r-lib/devtools) - Ver [**R Packages**](https://r-pkgs.org/), em especial o capitulo intitulado *The Whole Game*
+
+## Hoje!
+
+Vamos aprender uma parte fundamental do fluxo de trabalho de todo cientista de dados: a **limpeza**!
+
+Para isso, vamos passar por:
+1. Estruturas de dados no R (vetores, matrizes, listas, data.frames e tibbles)
+1. Pacotes utilizados para o manuseamento (**dlyr** e **data.table**) 
+1. Exemplo *hands-on* do fluxo de trabalho da equipe do DZ Lab: Sigmine
+
+<!-- A maior parte dos dados utilizados nas ciencias sociais sao produzidos (1) a partir de algum *measurement* de caracteristicas individuais ou coletivas ou (2) algum *measurement* do mundo ao nosso redor -->
+
+---
+
+## Set-Up
+
+```{r eval=FALSE}
+
+## Para Manusear os Dados
+install.packages('dplyr') # install.packages('tidyverse')
+install.packages('janitor')
+
+## Para Importar os Dados da Internet
+install.packages('readr') # install.packages('tidyverse')
+install.packages('RCurl')
+
+library(dplyr)
+library(janitor)
+library(readr)
+library(RCurl)
+
+```
+
+---
+
+## Estrutura de Dados
+
+Referencia: Fetzer, T. Lecture Notes. University of Chicago, 2017
+
+O R opera em estruturas de dados com nomes (lembram? Cada coisa no R tem um nome... OOP). A estrutura mais simples 'e um vetor numerico, o que 'e um conjunto de numeros agregados em um unico objeto.
+
+```{r}
+x <- c(10.4, 5.6, 3.1, 6.4, 21.7)
+x
+class(x)
+length(x)
+```
+---
+
+## Estrutura de Dados
+
+```{r}
+b <- c(x, "test")
+class(b)
+```
+
+Operacoes em vetores sao elemento por elemento *element-wise*:
+
+```{r}
+z <- sqrt(x)
+z * sqrt(x)
+z %*% sqrt(x)
+
+```
+
+---
+
+## Estrutura de Dados
+
+Voce pode selecionar ou particionar dados usando condicoes logicas (**booleans**)
+
+```{r}
+x <- c(x, 1/0)
+x
+x[is.infinite(x)]
+is.infinite(x)
+x[which.max(x)]
+
+```
+
+---
+
+## Estrutura de Dados
+
+```{r}
+x[!is.infinite(x)]
+x[1:4]
+x[-6]
+```
+
+Mas isso esta muito facil! Vamos aumentar o nivel...
+
+---
+
+## Estrutura de Dados: Matrizes
+
+Matrizes combinam vetores de dados que sao de um unico tipo (**numeric**, **integer**, **character** ou **logical**). Caso voce construa uma matriz com vetores de tipos diferentes de dados, o R vai ou te retornar um erro (o que 'e bom) ou vai fazer uma coercao de tipos por tras das cortinas (o que devemos evitar!)
+
+Vamos olhar isso no R...
+
+```{r, eval=FALSE}
+x <- rnorm(n = 26)
+y <- runif(n = 26)
+MAT <- cbind(x, y)
+class(MAT)
+
+rownames(MAT) <- 1:nrow(MAT)
+colnames(MAT) <- c("x", "y")
+# subsetting
+MAT[12, "y"]
+MAT[12, ]
+
+head(letters)
+
+MAT <- cbind(MAT, letters)
+
+head(MAT)
+```
+
+---
+
+## Estrutura de Dados: Data.frames
+
+Ate agora, isso ta parecendo uma aula de Algebra Linear. Afinal, nao queremos aprender a manusear dados? Cade a base??
+
+`data.frame` e `tibble` vao ser os melhores amigos de voces =)
+
+Vou me referir ao primeiro por facilidade de exposicao. Por enquanto, considerem `tibble` um `data.frame` melhorado (o porque disso ficara claro em breve)
+
+`data.frames` permitem a combinacao de multiplos tipos de objeto sem que o seu tipo **fundamental seja alterado**. Ou seja, diferentemente das matrizes que so poderiam ser construidas a partir de numeros ou palavras, agora podemos construir "matrizes" com numeros e palavras!
+
+```{r, eval=FALSE}
+x <- rnorm(n = 26)
+y <- runif(n = 26)
+DF <- data.frame(x, y)
+class(DF)
+DF[1:2, c("y", "x")]
+head(DF$x)
+class(DF$x)
+DF <- cbind(DF, letters)
+class(DF)
+class(DF$x)
+class(DF$letters)
+```
+---
+
+## Estrutura de Dados: Data.frames
+
+Reparem que cada coluna na base dados ficticia que acabamos de gerar tem uma `class` propria associada a eles (numeric, character, factor, ...). Geralmente, quando tratamos entre humanos, chamamos uma coluna/variavel de:
+
+1. **Numerica** - Continua ou Discreta
+1. **Alfanumerica** - Engloba palavras ou letras
+1. **Categorica** - Medidas qualitativas que queremos associar a algum numero (ex: muito ruim, ruim, razovael, bom, muito bom == 0-5)
+
+Reparem a sutileza: Faz sentido falar de uma coluna de uma matriz, mas nao falar de uma variavel de uma matriz ne? Variaveis automaticamente sao associadas a base de dados!
+
+## Brainstorming
+
+Quais exemplos vem a mente quando pensamos em alguma variavel dos tipos mencionados acima? Usem o curso de Economia para darem exemplos...
+ 
+---
+
+## Estrutura de Dados: Listas
+
+Antes de olharmos para uma base de dados do mundo real e para o `dplyr`/`tibble`, uma pausa para falar de uma outra estrutura relevante: **listas**
+
+Essa 'e a estrutura mais versatil, suportando diferentes tipos ou estrutura de dados. Por exemplo, tenho 3 bases de dados distintas que nao 'e possivel juntar em uma so, o que eu faco? Lista!
+
+'E basicamente o lugar onde voce pode fazer bagunca -- porem organizada! Caso voce nao siga um principio razoavel, o leitor futuro do seu codigo, muito provavelmente o seu **futuro eu** vai ficar um tanto confuso.
+
+```{r, eval=FALSE}
+LIST <- list(DT, DF, letters)
+class(LIST)
+class(LIST[[3]])
+head(LIST[[2]])
+LIST[[4]] <- y
+length(LIST)
+```
+
+---
+
+## Estrutura de Dados: Tibbles
+
+Referencia: [R for Data Science, Capitulo 10](https://r4ds.had.co.nz/tibbles.html)
+
+>Tibbles are data frames, but they tweak some older behaviours to make life a little easier. R is an old language, and some things that were useful 10 or 20 years ago now get in your way. It’s difficult to change base R without breaking existing code, so most innovation occurs in packages. Here we > will describe the tibble package, which provides opinionated data frames that make working in the tidyverse a little easier. In most places, I’ll use > the term tibble and data frame interchangeably; when I want to draw particular attention to R’s built-in data frame, I’ll call them data.frames.
+
+Recomendo fortemente que voces visitem a pagina da referencia. Usar `tibbles` ao inves de `data.frames` 'e a pratica da comunidade do R, alem de apresentar varias facilidades de integracao com os pacotes do `tidyverse`, que significa **tidy** + **universe**. As **tibbles** sao a estrutura de dados que aderem ao formato de **Tidy Data**, que veremos em alguns slides.
+
+---
+
+## Estrutura de Dados: Tibbles
+
+```{r, eval=FALSE}
+library(tidyverse)
+as_tibble(iris)
+class(iris)
+tibble(
+  x = 1:5, 
+  y = 1, 
+  z = x ^ 2 + y
+)
+tibble(
+  a = lubridate::now() + runif(1e3) * 86400,
+  b = lubridate::today() + runif(1e3) * 30,
+  c = 1:1e3,
+  d = runif(1e3),
+  e = sample(letters, 1e3, replace = TRUE)
+)
+```
+---
+
+## Analise Exploratoria
+
+PS: Esse slide esta muito ruim e deve ser modificado
+
+A primeira coisa que voce faz apos carregar uma base de dados nova no R 'e buscar entender quais informacoes estao contidas ali.
+
+Ex: PPM
+
+O nome correto para isso 'e analise exploratoria. O processo de manuseamento dos dados se chama **data engineering**.
+
+Vamos olhar para um exemplo do DataZoom e um exemplo de uma base do R
+
+```{r, eval=FALSE}
+
+library(tidyverse)
+
+diamonds
+
+```
+
+---
+## Tidy Data
+
+Referencia: [R for Data Science, Capitulo 12](https://r4ds.had.co.nz/tidy-data.html)
+
+> In this chapter, you will learn a consistent way to organise your data in R, an organisation called tidy data. Getting your data into this format requires some upfront work, but that work pays off in the long term. Once you have tidy data and the tidy tools provided by packages in the tidyverse, you will spend much less time munging data from one representation to another, allowing you to spend more time on the analytic questions at hand.
+
+![](https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png)
+
+
+---
+
+## Tidy Data
+
+Existem 3 regras que tornam uma base de dados *tidy*:
+
+1. Each variable must have its own column.
+1. Each observation must have its own row.
+1. Each value must have its own cell.
+
+Elas sao interrelacionadas, entao 'e impossivel satisfazer as 3. Na pratica:
+
+1. Put each dataset in a tibble.
+1. Put each variable in a column.
+
+In this example, only table1 is tidy. It’s the only representation where each column is a variable.
+
+```{r, eval=FALSE}
+table1
+table2
+table3
+
+# Spread across two tibbles
+table4a  # cases
+table4b  # population
+
+```
+
+---
+
+## Tidy Data
+
+> Why ensure that your data is tidy? There are two main advantages:
+
+> 1. There’s a general advantage to picking one consistent way of storing data. If you have a consistent data structure, it’s easier to learn the tools that work with it because they have an underlying uniformity.
+
+> 1. There’s a specific advantage to placing variables in columns because it allows R’s vectorised nature to shine. As you learned in `mutate` and `summary` functions, most built-in R functions work with vectors of values. That makes transforming tidy data feel particularly natural.
+
+dplyr, ggplot2, and all the other packages in the tidyverse are designed to work with tidy data. Here are a couple of small examples showing how you might work with table1.
+
+```{r, eval=FALSE}
+# Compute rate per 10,000
+table1 %>% 
+  mutate(rate = cases / population * 10000)
+
+# Compute cases per year
+table1 %>% 
+  count(year, wt = cases)
+
+```
+  
+---
+
+## Tidy Data (cont.)
+
+```{r, eval=FALSE}
+
+library(ggplot2)
+ggplot(table1, aes(year, cases)) + 
+  geom_line(aes(group = country), colour = "grey50") + 
+  geom_point(aes(colour = country))
+
+```
+
+---
+
+## Tidy Data: Pivoting
+
+
+The principles of tidy data seem so obvious that you might wonder if you’ll ever encounter a dataset that isn’t tidy. Unfortunately, however, most data that you will encounter will be untidy. There are two main reasons:
+
+1. Most people aren’t familiar with the principles of tidy data, and it’s hard to derive them yourself unless you spend a lot of time working with data.
+
+1. Data is often organised to facilitate some use other than analysis. For example, data is often organised to make entry as easy as possible.
+
+This means for most real analyses, you’ll need to do some tidying. The first step is always to figure out what the variables and observations are. Sometimes this is easy; other times you’ll need to consult with the people who originally generated the data. The second step is to resolve one of two common problems:
+
+- One variable might be spread across multiple columns.
+
+- One observation might be scattered across multiple rows.
+
+Typically a dataset will only suffer from one of these problems; it’ll only suffer from both if you’re really unlucky! To fix these problems, you’ll need the two most important functions in tidyr: `pivot_longer()` and `pivot_wider()`.
+
+---
+
+## Tidy Data: Pivoting
+
+```{r, eval=FALSE}
+table4a
+table4a %>% 
+  pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "cases")
+  
+  table4b %>% 
+  pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "population")
+  
+  tidy4a <- table4a %>% 
+  pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "cases")
+  
+tidy4b <- table4b %>% 
+  pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "population")
+
+left_join(tidy4a, tidy4b)
+
+table2 %>%
+    pivot_wider(names_from = type, values_from = count)
+```
+
+---
+
+## Tidy Data: Pivot Longer
+
+![](https://d33wubrfki0l68.cloudfront.net/3aea19108d39606bbe49981acda07696c0c7fcd8/2de65/images/tidy-9.png)
+
+---
+
+## Tidy Data: Pivot Wider
+
+
+![](https://d33wubrfki0l68.cloudfront.net/8350f0dda414629b9d6c354f87acf5c5f722be43/bcb84/images/tidy-8.png)
+
+Outras funcoes importantes nao aborados: separate, unite, deal with NA's
+
+Consultar Capitulo 13 sobre **Relational Data: Joins**
+
+---
+
+## Manuseamento de Dados: Dplyr
+
+Referencia: [R for Data Science, Capitulo 5](https://r4ds.had.co.nz/transform.html)
+
+Vamos seguir o site, to cansado de montar os slides :/
+
+---
+
+## Exemplo DZ Amazonia: PPM
+
+Vamos para o R...
+
+---
+
+## Dever de Casa
+
+- Abrir os dados que vao ser enviados no R (usem o pacote `readr`)
+- Pensar em o que aquelas variaveis ali querem dizer para a gente (lembrem-se da discussao de analise exploratoria)
+- Como organizar (veja secao de tidy data) e manusear (veja secao do dplyr) essa base de dados de forma a respeitar os principios discutidos na aula?
+- Produzam um script e uma base de dados final a ser entregue quando puder. De preferencia antes da proxima aula. 
+- Para quem enviar ate sabado de manha, vou mandar feedback do codigo comentado ate final de domingo. Envios posteriores terao respostas, bem, posteriores
+- Essa 'e uma oportunidade pra colocar a mao na massa e se familiarizar ao fluxo de trabalho do time DataZoom! Fiquem a vontade para tirar duvidas no canal do Slack `duvidas-curso-dz-lab` - vou responder ao menos uma vez pela manha e uma vez a noite
+- Mais importante: LEIAM O LIVRO R FOR DATA SCIENCE =)
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+infile = list.files(pattern = '.html')
+pagedown::chrome_print(input = infile, timeout = 100)
+```

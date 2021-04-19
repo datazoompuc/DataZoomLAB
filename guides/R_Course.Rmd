@@ -2,7 +2,7 @@
 title: "R: Uma Breve Introdução"
 author: "DataZoomLAB Team and Daniel AC Barbosa"
 date: "28/03/2021"
-output: html_document
+output: pdf_document
 bibliography: references_R.bib
 ---
 
