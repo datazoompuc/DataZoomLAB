@@ -24,24 +24,4 @@ and transparency in research with brazilian data.
 <!-- devtools::install_github("datazoompuc/datazoomLAB") -->
 <!-- ``` -->
 
-# Youtube
 
-### Tutorial para o Canal do Youtube
-
-1) Fazer download dos vídeos salvos no DropBox 
-
-2) Criação de Playlists: 
-  2.1) Clicar no ícone de três tracinhos no canto superior esquerdo
-  2.2) Selecionar a opção "Seus vídeos"
-  2.3) Clicar novamente no ícone de três tracinhos
-  2.4) Clicar na a opção "Playlists"
-  2.5) Clicar na opção "Nova Playlist" no canto superior direito
-
-3) Upload dos vídeos:
-  3.1) Clicar na opção "Criar" no canto superior direito, ao lado do ícone do canal
-  3.2) Selecionar a opção "Enviar vídeos"-> "Selecionar Arquivos"
-  3.3) Após selecionado o vídeo desejado, colar título e descrição, selecionar a playlist em que deseja colocá-lo e escolher tipo de vizualização (público, privado, privado com compartilhamento, não listado)
-  
-Observações Finais:
-
-* Fiz o vídeo de abertura das aulas de R no PowerPoint: criei uma animação e gravei a tela. Depois, juntei esse vídeo de abertura com o vídeo da aula usando o iMovie 
